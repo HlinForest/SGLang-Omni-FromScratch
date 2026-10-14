@@ -1,0 +1,34 @@
+# Read-only upstream reference checkout
+/sglang-omni/
+
+# Python environments and generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+htmlcov/
+.coverage
+
+# Local credentials and machine-specific settings
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Downloaded weights and generated profiling artifacts
+/checkpoints/
+/weights/
+/outputs/
+/logs/
+*.safetensors
+*.nsys-rep
+*.ncu-rep
