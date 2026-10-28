@@ -1,5 +1,7 @@
 # SGLang-Omni From Scratch
 
+> 每天4–5小时的整合安排：[统一学习入口](LEARNING.md) · [42天日程](study/DAILY-PLAN.md) · [每日笔记模板](study/templates/daily-note.md)
+
 从一个能跑的三阶段流水线开始，逐步读懂并重新实现 SGLang-Omni。
 
 面向熟悉 Python 与 PyTorch、希望深入推理系统工程的算法工程师。先运行、看输出与耗时，再理解系统设计，最后对照上游源码补全实现。课程以中文讲解，保留英文技术术语。

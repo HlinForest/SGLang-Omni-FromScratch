@@ -1,0 +1,177 @@
+{
+  "folders": [
+    {
+      "name": "Omni",
+      "path": "."
+    },
+    {
+      "name": "CSE291作业",
+      "path": "../cse291-assignments"
+    },
+    {
+      "name": "每日笔记",
+      "path": "study/notes"
+    },
+    {
+      "name": "C++ 10天",
+      "path": "../cpp-ai-systems-10days"
+    },
+    {
+      "name": "RL资料",
+      "path": "../rl-inference-lab"
+    }
+  ],
+  "settings": {
+    "files.encoding": "utf8",
+    "editor.wordWrap": "on",
+    "workbench.editor.labelFormat": "medium",
+    "search.exclude": {
+      "**/build/**": true,
+      "**/__pycache__/**": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.debugpy",
+      "ms-vscode.cpptools",
+      "ms-vscode.cmake-tools",
+      "ms-toolsai.jupyter"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "type": "process",
+        "command": "python",
+        "options": {
+          "cwd": "${workspaceFolder:Omni}"
+        },
+        "problemMatcher": [],
+        "label": "学习：生成当天笔记",
+        "args": [
+          "-X",
+          "utf8",
+          "study/tools/note.py",
+          "--day",
+          "${input:studyDay}"
+        ]
+      },
+      {
+        "type": "process",
+        "command": "python",
+        "options": {
+          "cwd": "${workspaceFolder:Omni}"
+        },
+        "problemMatcher": [],
+        "label": "学习：检查日程页面",
+        "args": [
+          "-X",
+          "utf8",
+          "study/tools/render_plan.py",
+          "--check"
+        ]
+      },
+      {
+        "type": "process",
+        "command": "python",
+        "options": {
+          "cwd": "${workspaceFolder:Omni}"
+        },
+        "problemMatcher": [],
+        "label": "Omni：追踪一份输入（本地阶段0）",
+        "args": [
+          "-X",
+          "utf8",
+          "-m",
+          "sglang_omni.pipeline.walkthrough"
+        ]
+      },
+      {
+        "type": "process",
+        "command": "python",
+        "options": {
+          "cwd": "${workspaceFolder:Omni}"
+        },
+        "problemMatcher": [],
+        "label": "Omni：观察四请求流水线（本地阶段0）",
+        "args": [
+          "-X",
+          "utf8",
+          "-m",
+          "sglang_omni.pipeline.demo",
+          "--requests",
+          "4",
+          "--trace"
+        ]
+      }
+    ],
+    "inputs": [
+      {
+        "id": "studyDay",
+        "type": "pickString",
+        "description": "选择逻辑学习日，已有笔记不会覆盖",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42"
+        ],
+        "default": "1"
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Omni：逐字段追踪",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "sglang_omni.pipeline.walkthrough",
+        "cwd": "${workspaceFolder:Omni}",
+        "console": "integratedTerminal",
+        "justMyCode": true
+      }
+    ]
+  }
+}

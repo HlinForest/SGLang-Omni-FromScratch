@@ -1,0 +1,1971 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-28",
+  "day_numbering": "逻辑学习日；未完成则顺延，不绑定日历日期",
+  "daily_minutes": "前5天300分钟，其余270分钟；休息另计，可在240–300分钟内缩减选读",
+  "upstream_commit": "870d77446b3fae6e4f4f2a6964f7eae2f75e663a",
+  "starting_state": "PA1/PA2/PA3均未完成；学习状态全部未开始",
+  "days": [
+    {
+      "day": 1,
+      "title": "CSE291 · PA1 自动微分与 Transformer 起步",
+      "goal": "先跑通计算图与梯度，再接 Transformer；今天只学支撑 PA1 的内容。",
+      "blocks": [
+        {
+          "minutes": 30,
+          "task": "核对三份题目、环境和提交清单；先确认 PA2 远程 grader 权限、MPI 与 PA3 GPU 可用性，记录缺口。"
+        },
+        {
+          "minutes": 120,
+          "task": "PA1 Q1：按依赖完成算子、广播反向与 Evaluator，逐类运行给定测试。"
+        },
+        {
+          "minutes": 105,
+          "task": "PA1 Q2：沿 embedding → causal attention → decoder → logits 追踪 shape，开始 Transformer 前向与 loss。"
+        },
+        {
+          "minutes": 30,
+          "task": "运行已完成部分测试；保留失败用例，停止扩展。"
+        },
+        {
+          "minutes": 15,
+          "task": "填今日笔记，记录 PA1 剩余项。"
+        }
+      ],
+      "evidence": [
+        "Q1 已通过/未通过列表和命令",
+        "Q2 数据形状图；初始状态 PA1/PA2/PA3 均未完成"
+      ],
+      "reuse": "不另学一套 PyTorch 基础；PA1 的训练过程供总 D21 复用。",
+      "rl": [
+        8
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "PA1 官方 notebook",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa1/CSE291-S26-PA1.ipynb"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 2,
+      "title": "CSE291 · PA1 收尾 → PA2 Triton",
+      "goal": "完成 PA1 必做链路，随后把 PA2 fused MatMul 做到正确。",
+      "blocks": [
+        {
+          "minutes": 75,
+          "task": "完成 PA1 训练、SGD、generation，检查 weights.pt 与官方必交项；若 PA1 未过测试，先修复再转 PA2。"
+        },
+        {
+          "minutes": 120,
+          "task": "PA2 Part 1：读取接口和参考语义，补齐 tile 索引、边界 mask、累加与 fused epilogue。"
+        },
+        {
+          "minutes": 45,
+          "task": "运行正确性检查；核对远程 A10 grader 返回记录。先正确，再比较配置。"
+        },
+        {
+          "minutes": 45,
+          "task": "准备 MPI 环境并运行官方通信示例，检查进程数和退出。"
+        },
+        {
+          "minutes": 15,
+          "task": "记录 PA1 状态、kernel 配置和真实硬件来源。"
+        }
+      ],
+      "evidence": [
+        "PA1 必交项清单与训练/生成记录",
+        "PA2 kernel 正确性结果；有权限时保留官方 grader 结果"
+      ],
+      "reuse": "此处 MatMul 是 RL-D3/D4 的主要 GPU 实践，后面只补本作业没有覆盖的边界。",
+      "rl": [
+        3,
+        4
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "PA1 notebook",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa1/CSE291-S26-PA1.ipynb"
+        },
+        {
+          "label": "PA2 说明",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa2/README.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 3,
+      "title": "CSE291 · PA2 MPI → PA3 MoE",
+      "goal": "先理解并完成通信语义，再把同类通信用于专家路由。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "PA2 Part 2：myAllreduce/myAlltoall、data split、DP/TP group、forward/backward helper；按官方限制使用通信原语并测试。"
+        },
+        {
+          "minutes": 90,
+          "task": "PA3 Part 1：在 PA2 通信基础上追踪 TP-MoE、EP-MoE、token 路由和输出恢复。"
+        },
+        {
+          "minutes": 45,
+          "task": "PA3 Part 2：列出参数、FLOPs、显存公式及单位，先做 Llama-3 8B 必做分析。"
+        },
+        {
+          "minutes": 15,
+          "task": "归档 PA2 已过/未过测试与配置；记录 MPI rank 和运行环境。"
+        },
+        {
+          "minutes": 15,
+          "task": "填笔记，写出通信输入与输出。"
+        }
+      ],
+      "evidence": [
+        "PA2 通信测试及失败项",
+        "MoE token→expert→token 顺序图；成本公式草稿"
+      ],
+      "reuse": "复用同一套 collective 语义，RL-D10/D12 不再重建通信程序。",
+      "rl": [
+        10,
+        12
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "PA2 说明",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa2/README.md"
+        },
+        {
+          "label": "PA3 说明",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa3/README.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 4,
+      "title": "CSE291 · PA3 MoE、成本与推测解码",
+      "goal": "把 PA3 三个技术部分串起来；只做必做项，暂缓 bonus。",
+      "blocks": [
+        {
+          "minutes": 75,
+          "task": "完成 MoE 的 TP/EP 正确性、benchmark 和解释，保留 all-to-all 路由证据。"
+        },
+        {
+          "minutes": 60,
+          "task": "完成训练成本与固定预算模型设计，逐项核对假设、单位和最终答案。"
+        },
+        {
+          "minutes": 120,
+          "task": "PA3 Part 3：沿 draft → target verification → accept/reject → update 阅读并完成 notebook。"
+        },
+        {
+          "minutes": 30,
+          "task": "跑最小正确性和接受率检查；真实 GPU 上再测 latency，CPU 仅验证逻辑。"
+        },
+        {
+          "minutes": 15,
+          "task": "记录推测解码中 target 与 draft 的区别。"
+        }
+      ],
+      "evidence": [
+        "PA3 Part 1/2 已完成项与未完成项",
+        "推测解码最小结果、模型配置与硬件记录"
+      ],
+      "reuse": "RL-D19 复用 PA3 推测解码证据；Omni 的 Thinker/Talker 不是 speculative draft/target。",
+      "rl": [
+        19
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "PA3 说明",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa3/README.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 5,
+      "title": "CSE291 · PA3 收尾与三份作业验收",
+      "goal": "以三份作业必做项全部通过为冲刺目标；今天结束后作出真实的完成判断。",
+      "blocks": [
+        {
+          "minutes": 90,
+          "task": "收尾 speculative decoding，完成要求的 sweep、接受率/时延与失败条件分析。"
+        },
+        {
+          "minutes": 60,
+          "task": "完成 PA3 个人 argumentative essay，按题目检查论点和依据。"
+        },
+        {
+          "minutes": 120,
+          "task": "重跑 PA1/PA2/PA3 要求的测试与报告；local_check 通过不等于整份 PA3 完成，逐项核对必交内容。"
+        },
+        {
+          "minutes": 15,
+          "task": "核对文件、个人/小组规则与实际提交要求；记录完成或顺延，不自动代提交课程作业。"
+        },
+        {
+          "minutes": 15,
+          "task": "只写非解答性的学习总结，确定下一学习日起点。"
+        }
+      ],
+      "evidence": [
+        "三份作业各自的必交项清单和测试证据",
+        "PA3 benchmark/essay 状态；仍失败的项及下一步"
+      ],
+      "reuse": "这五天不加 C++、新 RL 课程或 K8S。若未完成，插入 CSE 补完日，D6 及以后整体顺延。",
+      "rl": [
+        5,
+        7,
+        19
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "PA3 官方说明",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa3/README.md"
+        },
+        {
+          "label": "作业政策与入口",
+          "url": "https://haoailab.com/cse291-s26/assignments/"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 6,
+      "title": "Omni · Omni 任务与一份输入的变化 / C++ 1",
+      "goal": "先理解输入一句话如何得到音频，以及模型与运行时分别负责什么。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读本地入门讲义，运行 walkthrough；逐字段追踪 text、占位 token_ids、零值 samples，说明 Mock 没有生成语音。"
+        },
+        {
+          "minutes": 45,
+          "task": "C++ 第 1 天：引用、指针与 span。打开 C++ 文件夹 days/day01/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 75,
+          "task": "复用 RL-D1 的 tensor/storage/stride；区分张量引用、视图与复制。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "同一份请求的输入→输出表",
+        "Mock 能验证/不能验证的两条结论"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [
+        1
+      ],
+      "cpp": 1,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "模型族数据契约",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/models/qwen3_omni/payload_types.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 7,
+      "title": "Omni · Stage、队列与串行/流水线 / C++ 2",
+      "goal": "从一个请求开始，再看多个请求如何交错执行。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读本地 minimal.py 和 demo.py，运行单请求/四请求；观察 await、Inbox、Outbox 和正常退出。"
+        },
+        {
+          "minutes": 75,
+          "task": "C++ 第 2 天：RAII 与 Tensor2D 生命周期。打开 C++ 文件夹 days/day02/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 45,
+          "task": "解释等待重叠；复用前五天实验总结，不把模拟等待当成 GPU 加速。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "请求事件顺序与日志",
+        "一次 RAII 释放时机观察"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [
+        7
+      ],
+      "cpp": 2,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "Stage 运行循环",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/stage/runtime.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 8,
+      "title": "Omni · Payload 与所有权 / C++ 3",
+      "goal": "理解记录字段、张量所有权与生命周期如何跨阶段延续。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "对照本地 StagePayload 与上游 Qwen3OmniPipelineState，只跟踪一条路径；标出保留/新增/消费的字段。"
+        },
+        {
+          "minutes": 90,
+          "task": "C++ 第 3 天：unique_ptr 与移动语义。打开 C++ 文件夹 days/day03/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 30,
+          "task": "对照 C++ move 与 Python 引用；移动语义不等于跨进程零拷贝。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "字段流向图",
+        "资源拥有者与使用者说明"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [],
+      "cpp": 3,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "模型 payload",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/models/qwen3_omni/payload_types.py"
+        },
+        {
+          "label": "本地分发",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/local_dispatch.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 9,
+      "title": "Omni · 声明式配置与拓扑 / C++ 4",
+      "goal": "把配置中的 Stage 和边解释成一条实际数据路径。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读 PipelineConfig、StageConfig、terminal_stages；从一个配置追踪入口、普通边与终点，不实现完整 planner。"
+        },
+        {
+          "minutes": 75,
+          "task": "C++ 第 4 天：模板、STL 与 lambda。打开 C++ 文件夹 days/day04/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 45,
+          "task": "用模板与容器知识看接口契约；记录启动前能发现的配置错误。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "一个配置的拓扑草图",
+        "入口和终点的解释"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [],
+      "cpp": 4,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "配置契约",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/config/schema.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 10,
+      "title": "Omni · Coordinator 请求生命周期 / C++ 5",
+      "goal": "解释 submit、完成、abort 由谁负责。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "追踪 Coordinator.submit/handle_completion/abort；对照对应上游测试阅读正常和取消路径。"
+        },
+        {
+          "minutes": 60,
+          "task": "C++ 第 5 天：CMake、GDB 与错误定位。打开 C++ 文件夹 days/day05/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 60,
+          "task": "复用 C++ 调试方法，给可运行的本地 demo 设置断点；上游依赖没准备时只标源码阅读。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "request_id 的完整生命周期",
+        "取消时待回收资源列表"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [],
+      "cpp": 5,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "请求协调",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/coordinator.py"
+        },
+        {
+          "label": "Coordinator 测试",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/tests/unit_test/pipeline/test_coordinator.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 11,
+      "title": "Omni · Fan-in、动态路由与多终点 / C++ 6",
+      "goal": "理解什么时候能继续、什么时候才算整个请求完成。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读 AggregatedInput、路由和 terminal 完成逻辑；对比单输入、多模态汇聚与只返回文本。"
+        },
+        {
+          "minutes": 75,
+          "task": "C++ 第 6 天：连续内存与转置。打开 C++ 文件夹 days/day06/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 45,
+          "task": "结合连续内存解释聚合元数据和搬运张量的区别；不假定所有模型都使用同一阶段图。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "两条分支汇合的事件表",
+        "early end 与正常全部终点完成的区别"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [],
+      "cpp": 6,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "输入汇聚",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/stage/input.py"
+        },
+        {
+          "label": "协调器",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/coordinator.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 12,
+      "title": "Omni · 请求内流式输出 / C++ 7",
+      "goal": "区分多个请求并发和一个请求分块输出。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读 StreamQueue.put/put_done/get_with_source，追踪 chunk、完成信号和下游消费；本地第一课仍是整请求交接。"
+        },
+        {
+          "minutes": 75,
+          "task": "C++ 第 7 天：CPU MatMul 正确性基线。打开 C++ 文件夹 days/day07/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 45,
+          "task": "从音频中间表示到 waveform 补齐数据含义；只比较同一输入输出路径的首块和总耗时。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "stream chunk 和 done 的时序图",
+        "CPU MatMul 基线正确性"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [],
+      "cpp": 7,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "流式队列",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/stage/stream_queue.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 13,
+      "title": "Omni · 进程放置与内存预算 / C++ 8",
+      "goal": "理解阶段共置或隔离会改变什么。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读 StagePlacementPlanner 和 build_process_topology_plan；标出每个进程、设备、显存份额和共享资源。"
+        },
+        {
+          "minutes": 75,
+          "task": "C++ 第 8 天：循环次序与可靠计时。打开 C++ 文件夹 days/day08/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 45,
+          "task": "复用 PA1/PA3 内存分析；训练状态、推理 KV 和激活必须分项，估算与实测分开。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "进程/设备/资源表",
+        "C++ 计时边界和预热记录"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [
+        8
+      ],
+      "cpp": 8,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "Placement",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/config/placement.py"
+        },
+        {
+          "label": "Topology",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/config/topology.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 14,
+      "title": "Omni · Relay：控制消息与张量数据 / C++ 9",
+      "goal": "沿一个张量说明数据为什么不能总随控制消息传输。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读 communication.md、DataRef、Relay 接口与 SHM；只追踪同进程引用→跨进程描述符→释放。"
+        },
+        {
+          "minutes": 90,
+          "task": "C++ 第 9 天：Tiling 与边界处理。打开 C++ 文件夹 days/day09/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 30,
+          "task": "复用 PA2 collective 输入输出；SHM、CUDA IPC、NIXL 各有环境条件，不笼统称全部零拷贝。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "控制面/数据面图",
+        "C++ tiled MatMul 非整块尺寸结果"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [
+        10
+      ],
+      "cpp": 9,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "通信设计",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/docs/developer_reference/communication.md"
+        },
+        {
+          "label": "Relay 接口",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/relay/base.py"
+        },
+        {
+          "label": "SHM 后端",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/relay/shm.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 15,
+      "title": "Omni · 调度、背压与 C++ 总结 / C++ 10",
+      "goal": "把批处理、队列积压和 CPU 性能观察联系起来。",
+      "blocks": [
+        {
+          "minutes": 135,
+          "task": "读 SimpleScheduler.collect_batch/run_batch 与流式调度器；说明队列上限、批等待和下游速度的取舍。"
+        },
+        {
+          "minutes": 90,
+          "task": "C++ 第 10 天：多线程与性能报告。打开 C++ 文件夹 days/day10/README.md，运行示例；现有练习按自身进度选做，参考实现可直接跟读。"
+        },
+        {
+          "minutes": 30,
+          "task": "完成 C++ 报告，将 CPU MatMul 与 PA2 GPU 实验并排记录；分别解释访存，禁止无条件直接比较倍数。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写当天笔记，记录已运行与只读源码的边界。"
+        }
+      ],
+      "evidence": [
+        "C++ 10 天报告与证据索引",
+        "Stage 背压位置与代价"
+      ],
+      "reuse": "C++ 只占这一段固定时间；Omni 后续课未实现时以固定源码/测试阅读推进，不声称已跑通。",
+      "rl": [],
+      "cpp": 10,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "非 AR 调度",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/simple_scheduler.py"
+        },
+        {
+          "label": "流式调度",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/streaming_simple_scheduler.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 16,
+      "title": "GPU 基础查漏与 Omni 数据路径复盘",
+      "goal": "用已完成的 PA2 抵扣 GPU 基础，只补缺失证据。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "对照 PA2 kernel：索引、尾块、tiling、配置和计时；解释每一次数据访问。"
+        },
+        {
+          "minutes": 90,
+          "task": "检查 RL-D2 vector add 与 RL-D6 reduction 是否真正覆盖；未覆盖就做最小边界/误差验证，缺 GPU 保留待测。"
+        },
+        {
+          "minutes": 45,
+          "task": "复盘 Omni 从 payload 到 Stage 的数据流；修补前十天笔记，不开启高级优化。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "PA2→RL-D2–D7 抵扣表，未覆盖项明列",
+        "CPU、GPU、模拟三类证据分开"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "PA2",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa2/README.md"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 17,
+      "title": "SGLang AR 引擎桥接与请求路径",
+      "goal": "理解 Omni 编排层与 SGLang 自回归引擎的职责边界。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "沿 OmniScheduler 的 batch 与输出路径阅读，先画出 runtime→scheduler→model worker 的关系。"
+        },
+        {
+          "minutes": 90,
+          "task": "复用 RL-D15/D17 和 K8S 第6章的请求路径问题；vLLM 只作为概念对照，不另做一个引擎项目。"
+        },
+        {
+          "minutes": 45,
+          "task": "固定候选模型和运行版本；检查上游依赖/设备后决定真实运行或只读源码，记录阻塞。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "一个请求的调用链",
+        "模型、环境、版本可运行性清单"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        15,
+        17
+      ],
+      "cpp": null,
+      "k8s": [
+        6
+      ],
+      "sources": [
+        {
+          "label": "AR 桥接调度器",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/omni_scheduler.py"
+        },
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 18,
+      "title": "KV Cache、Prefix Cache 与失效边界",
+      "goal": "用预算与生命周期解释缓存，而不是记组件名称。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "追踪 AR 桥接与底层引擎缓存职责；明确 Omni payload 不等于 KV cache。"
+        },
+        {
+          "minutes": 90,
+          "task": "读 RL-D16/D18 和 K8S 第7章；按 KV heads、层数、token 数、dtype 估算，区分与 query heads 的关系。"
+        },
+        {
+          "minutes": 45,
+          "task": "建立重复前缀/不重复前缀的对照记录；能跑真实模型才测命中收益，否则只做预算和源码说明。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "KV 预算、单位与模型假设",
+        "释放/前缀复用/版本失效的边界"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        16,
+        18
+      ],
+      "cpp": null,
+      "k8s": [
+        7
+      ],
+      "sources": [
+        {
+          "label": "OmniScheduler",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/omni_scheduler.py"
+        },
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 19,
+      "title": "Continuous Batching 与 Chunked Prefill",
+      "goal": "理解长短请求如何竞争计算和 KV 资源。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读调度与流式输出代码：短请求结束后如何释放位置，下游 stage 是否同一调度策略。"
+        },
+        {
+          "minutes": 90,
+          "task": "K8S 第15章与 RL-D17/D18 合并；固定长短负载，每次只改变一个调度开关。"
+        },
+        {
+          "minutes": 45,
+          "task": "记录 TTFT、输出长度、吞吐与错误率；无真实 GPU 时画时间线，性能栏填待测。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "固定负载和单变量对照设计",
+        "AR 与非 AR 阶段的批处理差异"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        17,
+        18
+      ],
+      "cpp": null,
+      "k8s": [
+        15
+      ],
+      "sources": [
+        {
+          "label": "OmniScheduler",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/omni_scheduler.py"
+        },
+        {
+          "label": "SimpleScheduler",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/simple_scheduler.py"
+        },
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 20,
+      "title": "量化与推测解码：复用 PA3",
+      "goal": "解释优化成立的条件，并避免混淆语音双阶段与推测解码。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "以 Omni 当前模型路径为例标出精度和阶段边界，不假设所有模型都支持同一种量化或 speculative backend。"
+        },
+        {
+          "minutes": 90,
+          "task": "复用 PA3 Part3 的 draft/target、接受率与耗时数据；用 RL-D19 的成本模型解释成功与变慢条件。"
+        },
+        {
+          "minutes": 45,
+          "task": "补位宽/存储量算例；整理 Thinker/Talker 与 draft/target 的区别，不再写一份 speculative pipeline。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "PA3 证据链接或待补项",
+        "精度、存储和延迟的条件说明"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        19
+      ],
+      "cpp": null,
+      "k8s": [
+        15
+      ],
+      "sources": [
+        {
+          "label": "PA3",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa3/README.md"
+        },
+        {
+          "label": "模型数据契约",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/models/qwen3_omni/payload_types.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 21,
+      "title": "训练显存与并行机制补齐",
+      "goal": "用 PA1/PA2/PA3 的证据补全训练侧机制，避免与推理调度混淆。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "复用 PA1 小模型：整 batch 与梯度累积比较；检查 loss 缩放、dropout，阅读/运行现成 checkpoint 对照。"
+        },
+        {
+          "minutes": 90,
+          "task": "复用 PA2/PA3 的 TP、DP、collective；补 ZeRO 状态分片表和 2-stage/4-microbatch PP 时间线。"
+        },
+        {
+          "minutes": 45,
+          "task": "对照 Omni placement：训练 PP、Omni stage 图和 K8S 调度解决不同层的问题；只读 K8S 第12章对应部分。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "梯度一致性或未验证说明",
+        "DP/ZeRO/TP/PP 的切分、通信、代价表"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "cpp": null,
+      "k8s": [
+        12
+      ],
+      "sources": [
+        {
+          "label": "PA1",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa1/CSE291-S26-PA1.ipynb"
+        },
+        {
+          "label": "PA2",
+          "url": "https://github.com/hao-ai-lab/cse-dsc291-s26-pa/blob/b9428ec2466fcf777d79e0ea32501e889e49040c/pa2/README.md"
+        },
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 22,
+      "title": "服务入口、SSE/PCM 与延迟指标",
+      "goal": "从用户请求追踪到首文本/首音频输出。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "沿 protocol→openai_api→Client→Coordinator 阅读同一请求，分别追踪文本 SSE 和音频响应。"
+        },
+        {
+          "minutes": 90,
+          "task": "把 K8S 第17章指标迁移到 Omni；定义请求起点、首 token/首音频、最终结束，分清客户端/服务端时间。"
+        },
+        {
+          "minutes": 45,
+          "task": "设计并发1/4/8固定负载与错误记录；可运行环境才执行真实 benchmark，否则保存可复用的测量方案。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "API 请求→响应时序图",
+        "TTFT/TTFA/端到端时延的计时边界"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        20
+      ],
+      "cpp": null,
+      "k8s": [
+        17
+      ],
+      "sources": [
+        {
+          "label": "服务协议",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/protocol.py"
+        },
+        {
+          "label": "API",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/openai_api.py"
+        },
+        {
+          "label": "Client",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/client/client.py"
+        },
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 23,
+      "title": "Request-level Profiling 与可信性能报告",
+      "goal": "先找到等待/执行/传输耗时，再讨论优化。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 event_recorder 与 views，关联 request_id、stage、事件；区分排队、执行和阶段间交接。"
+        },
+        {
+          "minutes": 90,
+          "task": "选读 K8S 第19章；PyTorch Profiler/Nsight 只在匹配环境中使用，CPU 示例仅能展示本地行为。"
+        },
+        {
+          "minutes": 45,
+          "task": "复用 D22 负载，汇总 p50/p95、样本数、错误率、预热与首音频；为每个结论附原始证据。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "一份请求时序和瓶颈说明",
+        "基线报告或明确的硬件待测表"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        5,
+        20,
+        21
+      ],
+      "cpp": null,
+      "k8s": [
+        17,
+        19
+      ],
+      "sources": [
+        {
+          "label": "事件记录",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/profiler/event_recorder.py"
+        },
+        {
+          "label": "视图",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/profiler/views.py"
+        },
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 24,
+      "title": "K8S 基础与 GPU 资源声明",
+      "goal": "在理解单机进程之后再理解 Pod 和 GPU 分配。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读第1章 Pod、Deployment、Service、探针；将 Omni launcher 的进程边界映射到部署单元。"
+        },
+        {
+          "minutes": 90,
+          "task": "选第4章驱动、toolkit、device plugin/GPU Operator；只弄清谁提供 GPU 资源，不同时展开 MIG/MPS/DRA。"
+        },
+        {
+          "minutes": 45,
+          "task": "已有可用测试集群就做最小部署/查询；无集群则读官方示例并画资源表，记录未部署，不占用已有生产集群。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "进程→容器→Pod→节点关系图",
+        "资源与健康检查清单；实测或设计标签"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [],
+      "cpp": null,
+      "k8s": [
+        1,
+        4
+      ],
+      "sources": [
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "Kubernetes 基础",
+          "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/"
+        },
+        {
+          "label": "GPU 资源",
+          "url": "https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/"
+        },
+        {
+          "label": "进程启动",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/launcher.py"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 25,
+      "title": "K8S 调度、冷启动与扩缩容",
+      "goal": "理解服务能否放得下、启动多久，以及扩容为何不即时。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "第5章 requests/limits、affinity、taint/toleration；把 GPU 放置约束写成可解释的资源要求。"
+        },
+        {
+          "minutes": 90,
+          "task": "选读第11章冷启动各阶段与第16章指标扩缩容；用 Omni 请求指标解释何时排队而非只看 GPU 利用率。"
+        },
+        {
+          "minutes": 45,
+          "task": "列出启动与ready之前的模型加载、warmup；观察已有环境或阅读示例，不新建 Operator/多节点平台。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "调度失败的排查顺序",
+        "冷启动时间线和一个扩缩容反例"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [],
+      "cpp": null,
+      "k8s": [
+        5,
+        11,
+        16
+      ],
+      "sources": [
+        {
+          "label": "K8S AI Infra 19 章大纲（按指定章节选读）",
+          "url": "https://my.feishu.cn/wiki/IGekw2vrdiCtS1kQYwIconEBnFb"
+        },
+        {
+          "label": "资源调度与分配",
+          "url": "https://kubernetes.io/docs/concepts/scheduling-eviction/"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 26,
+      "title": "Omni 阶段复盘与部署边界",
+      "goal": "把当前能运行、能解释和未验证的能力分开。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "重走一条用户请求：协议→coordinator→stage→engine→stream→回收，修补解释缺口。"
+        },
+        {
+          "minutes": 90,
+          "task": "复用 D18–D25 的缓存、负载、指标和部署材料，完成一页系统图与已验证能力清单。"
+        },
+        {
+          "minutes": 45,
+          "task": "补欠账或硬件测量；不读新课。决定后续 RL 最小实验如何复用日志/队列思路，避免把 learner 塞入 Omni。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写统一笔记；把复用证据链接到已有记录，避免复制结论。"
+        }
+      ],
+      "evidence": [
+        "系统图与能力矩阵",
+        "尚未实现/未测试项及进入下一阶段的前提"
+      ],
+      "reuse": "复用已完成且有证据的部分；对应主题只读过时仍标阅读，不能抵扣实际实验。",
+      "rl": [
+        21
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "服务设计",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/docs/developer_reference/apiserver_design.md"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 27,
+      "title": "RL 样本契约与 Omni 请求契约",
+      "goal": "为后面的概率与版本讨论先明确记录的含义。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D22 与 RLHF Training Overview，建立4-action contextual bandit 的样本结构；区分行为 q、固定 old learner 与当前 learner 的 logprob。"
+        },
+        {
+          "minutes": 90,
+          "task": "回看 Omni payload、request_id 和 finish_reason；比较推理请求完成与训练样本可用的条件，learner 保持独立于 Omni stage。"
+        },
+        {
+          "minutes": 45,
+          "task": "检查 sample_id、context/action/reward、采样配置和版本字段，记录固定评估输入。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "样本字段表与三种 logprob 定义",
+        "Omni 请求/训练样本职责对照"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        22
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "模型 payload",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/models/qwen3_omni/payload_types.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 28,
+      "title": "REINFORCE 与可枚举基准",
+      "goal": "用小任务判断梯度方向是否正确。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D23，运行/补齐最小 REINFORCE；将枚举精确梯度与采样估计比较，检查 reward/baseline detach。"
+        },
+        {
+          "minutes": 90,
+          "task": "继续追踪 Omni 单一模型族的数据流，明确中间音频表示、采样率和 waveform 的来源；源码阅读不能算真实生成。"
+        },
+        {
+          "minutes": 45,
+          "task": "记录 loss、reward、entropy 与随机种子；先检查符号与有限值，不追求大模型效果。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "精确/采样梯度对照",
+        "模型输入输出契约更新"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        23
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "Qwen3 Omni payload",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/models/qwen3_omni/payload_types.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 29,
+      "title": "PPO Clip 与 GRPO-style",
+      "goal": "看清目标函数改变什么以及简化实验省略了什么。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D24/D25，比较正负 advantage 的 clipped objective；同 context 的4-action组计算 advantage，全同 reward 时保持有限。"
+        },
+        {
+          "minutes": 90,
+          "task": "回到 OmniScheduler，区分推理采样配置与训练 loss；推理引擎不会因为使用 GRPO 就改变为 learner。"
+        },
+        {
+          "minutes": 45,
+          "task": "检查 old/current 梯度、std 定义、epsilon、KL 位置与 loss 分母；只称 bandit GRPO-style。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "正负 advantage 与零方差组结果",
+        "训练目标/推理接口边界"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        24,
+        25
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "AR 调度",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/omni_scheduler.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 30,
+      "title": "KL、Mask 与评估",
+      "goal": "先把指标定义一致，再比较训练方法。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D26/D27；两条长短序列比较 token/sequence 平均与 mask；区分 KL 正则与 off-policy 纠偏。"
+        },
+        {
+          "minutes": 90,
+          "task": "复用 Omni 请求级指标定义：有效输出、空输出、失败请求分别统计；思考为何吞吐提高不等于任务质量提高。"
+        },
+        {
+          "minutes": 45,
+          "task": "用独立 contexts/固定评估策略比较小任务；独立 logits 表只能报告已知 context 精确期望，完整多 seed 对照集中 D41。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "mask 和 loss 分母验证",
+        "评估口径及不能声称的泛化"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        26,
+        27
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "API 结果与错误",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/openai_api.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 31,
+      "title": "同步 RL 闭环与模型服务边界",
+      "goal": "先有可复现的同步基线，再引入异步。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "整理 sample→reward→train→publish 最小同步入口；每批记录采样版本和完整权重快照。"
+        },
+        {
+          "minutes": 90,
+          "task": "对照 Omni launcher 的模型加载和请求接入生命周期；只作边界比较，不虚构上游 RL 热更新 API。"
+        },
+        {
+          "minutes": 45,
+          "task": "运行一轮并保存配置、结果和版本日志；复盘本周，不叠加新书。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "同步闭环日志",
+        "训练/服务系统边界图"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        28
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "启动生命周期",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/launcher.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 32,
+      "title": "Ray Actor 与 Omni 多进程",
+      "goal": "理解谁持有状态、谁发起计算，以及如何清理。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D29/D31，先锁定可用 Ray 环境；跑两个 sampler actor 和同步 learner 的受控交错，无法运行则保留待验证。"
+        },
+        {
+          "minutes": 90,
+          "task": "对照 Omni process topology 与 launcher，定位启动、就绪、异常退出和资源清理。"
+        },
+        {
+          "minutes": 45,
+          "task": "区分 Ray 对象引用、Python 引用、SHM/设备内存；不把 CPU actor 实验当多 GPU 性能。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "两个 actor 的状态/生命周期日志",
+        "Omni 进程关系与回收路径"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        29,
+        31
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "进程拓扑",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/config/topology.py"
+        },
+        {
+          "label": "启动器",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/launcher.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 33,
+      "title": "有界 Buffer 与背压",
+      "goal": "让生产者更快时仍能控制内存和等待。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D30，观察有界 rollout buffer、最大在途任务和队列长度；复用已有小闭环，不再建另一套框架。"
+        },
+        {
+          "minutes": 90,
+          "task": "回看 Omni SimpleScheduler/StreamingSimpleScheduler；沿慢下游定位积压点。"
+        },
+        {
+          "minutes": 45,
+          "task": "改变生产/消费相对速度，记录队列长度、等待和有效消费数；模拟延时只证明控制流程。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "队列有界与等待记录",
+        "RL buffer / Omni stage 队列区别"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        30
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "批处理调度",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/simple_scheduler.py"
+        },
+        {
+          "label": "流式调度",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/streaming_simple_scheduler.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 34,
+      "title": "Staleness、超时与去重",
+      "goal": "避免无限等待和重复消费，并知道样本旧了多少。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D32/D33，记录 learner_version-sampler_version，改变 lag 上限并注入延迟/重复结果。"
+        },
+        {
+          "minutes": 90,
+          "task": "读 Omni abort 与 stream done 的测试路径；区分请求取消、超时、部分输出和正常完成。"
+        },
+        {
+          "minutes": 45,
+          "task": "记录丢弃率、等待时间、有效样本率；确认重复 sample_id 不重复入队。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "lag 与有效样本统计",
+        "取消/超时/完成路径表"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        32,
+        33
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "协调器",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/pipeline/coordinator.py"
+        },
+        {
+          "label": "流式测试",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/tests/unit_test/pipeline/test_stage_streaming.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 35,
+      "title": "完整权重快照与缓存版本",
+      "goal": "解释为什么传完字节后还需要发布协议。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D34：先完整 load 再发布 version，记录采样期间使用的快照；按版本讨论缓存失效。"
+        },
+        {
+          "minutes": 90,
+          "task": "追踪 Omni 数据面对象的生命周期和清理；将请求张量传输与模型权重发布明确分开。"
+        },
+        {
+          "minutes": 45,
+          "task": "制造一次半更新风险的最小案例并验证未发布；只记录实际执行结果。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "完整快照发布与失败记录",
+        "KV/cache 与权重版本关系"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        34
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "数据引用",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/comm/data_ref.py"
+        },
+        {
+          "label": "Relay 接口",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/relay/base.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 36,
+      "title": "同步/异步对照与系统复盘",
+      "goal": "同时看学习效果、有效工作量和耗时。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "复用 RL-D35：比较同步、无 lag 上限、有限 lag，固定任务/资源/种子与预算。"
+        },
+        {
+          "minutes": 90,
+          "task": "汇总 Omni 到目前的调用链、调度、通信和服务图；回到最薄弱的一处源码，不增加新机制。"
+        },
+        {
+          "minutes": 45,
+          "task": "报告 reward/update 与 reward/wall-clock、有效样本率、丢弃率；留出补测时间。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "对照表和原始证据",
+        "Omni 能力矩阵更新"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        35
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "请求 profiling 视图",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/profiler/views.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 37,
+      "title": "数值差异与 Batch Invariance",
+      "goal": "把同权重、同输入与同数值结果的区别说清。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D36，固定输入/权重比较单样本与不同 batch 组织；记录 dtype、shape、误差，无差异也如实写。"
+        },
+        {
+          "minutes": 90,
+          "task": "复用 PA2/C++ reduction 或 MatMul 的累加顺序经验；审视 Omni benchmark 是否混入不同采样/数值配置。"
+        },
+        {
+          "minutes": 45,
+          "task": "记录种子和 deterministic 设置的能力边界；CPU 结果不能替代 GPU kernel 数值证据。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "误差分布或零差异记录",
+        "可复现配置与结论边界"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        36
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "OmniScheduler",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/scheduling/omni_scheduler.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 38,
+      "title": "IS / TIS 与三种概率",
+      "goal": "在全支持域小任务中验证纠偏的收益和代价。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D37：以 q、p_old、p_theta 区分策略更新比率和 sampler mismatch 比率；TIS 固定权重并 detach。"
+        },
+        {
+          "minutes": 90,
+          "task": "对照推理端 temperature/top-p 的概率定义，解释 mask replay 不能恢复未采到动作，也不能自动修复前缀分布。"
+        },
+        {
+          "minutes": 45,
+          "task": "比较精确梯度、未纠偏、IS、TIS；记录 bias、variance、ESS 和截断比例，不预设 TIS 必胜。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "两个 ratio 的定义与验证",
+        "小任务结果及不可迁移到完整轨迹的边界"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        37
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "请求采样协议",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/serve/protocol.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 39,
+      "title": "Pack/Unpack 与原子发布",
+      "goal": "把布局转换、传输与发布看成不同步骤。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D38/D39；小权重 pack/unpack 保存 shape/dtype/offset，检查重建前向一致；staging→校验→version 切换。"
+        },
+        {
+          "minutes": 90,
+          "task": "对照 Omni SHM/NIXL 接口与通信设计；只读复杂后端，解释本机拷贝并非 RDMA benchmark。"
+        },
+        {
+          "minutes": 45,
+          "task": "注入传输中断或校验失败，确认没有半更新版本被发布；复用 D35 协议。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "权重重建一致性",
+        "失败不发布的日志与后端前提表"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        38,
+        39
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "SHM",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/relay/shm.py"
+        },
+        {
+          "label": "NIXL",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/relay/nixl.py"
+        },
+        {
+          "label": "通信设计",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/docs/developer_reference/communication.md"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 40,
+      "title": "异构采样案例与 Omni 后续路线",
+      "goal": "判断哪些结论可复用，哪些仍需要真实模型或集群。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "读 RL-D40 的原案例，按差异来源解释 MIS、centering、mask replay 的作用与局限，不复现大型集群。"
+        },
+        {
+          "minutes": 90,
+          "task": "从固定版本审视模型族、CUDA Graph、Router、多节点边界；选一个后续方向，完整1:1复刻仍属于长期目标。"
+        },
+        {
+          "minutes": 45,
+          "task": "列出实验与源码证据缺口，删去没有证据支持的性能表述。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "一页案例分析",
+        "后续优先级与环境条件"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        40
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "上游目录与范围",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/README.md"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 41,
+      "title": "三组种子与最终测量补齐",
+      "goal": "让最终报告能区分效果、噪声和缺失证据。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "复用 RL-D27/D41：同步、异步未纠偏、异步+TIS 各3个seed；样本/更新预算和时间预算分别比较。"
+        },
+        {
+          "minutes": 90,
+          "task": "复测 Omni 同一工作负载的请求指标；若仍无 GPU，保留设计与Mock证据，明确真实模型测量待完成。"
+        },
+        {
+          "minutes": 45,
+          "task": "检查评估、lag、有效样本率、失败率和各seed分散；只补现有实验，不读新材料。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "3-seed 小任务对照或阻塞记录",
+        "Omni 基线和硬件待测清单"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        27,
+        41
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "Profiling",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/sglang_omni/profiler/views.py"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    },
+    {
+      "day": 42,
+      "title": "整理成果、复现与下一阶段",
+      "goal": "用证据解释一条 Omni 请求和一个关键设计取舍。",
+      "blocks": [
+        {
+          "minutes": 120,
+          "task": "从可复现环境重跑已有入口，检查依赖/版本/命令、正确性记录与结果出处。"
+        },
+        {
+          "minutes": 90,
+          "task": "整理 CSE291 学习总结、C++ CPU报告、Omni源码图/基线、RL小实验与K8S部署设计；课程解答留本地。"
+        },
+        {
+          "minutes": 45,
+          "task": "用5分钟讲清输入输出、阶段边界、瓶颈、已验证能力与待验证项；确认后续1:1复刻路线。"
+        },
+        {
+          "minutes": 15,
+          "task": "填写笔记：事实、解释、限制、明日起点。"
+        }
+      ],
+      "evidence": [
+        "最终证据索引与复现说明",
+        "完成状态按实际记录，未完成项目明确顺延"
+      ],
+      "reuse": "沿用同一小型 RL 闭环和 Omni 项目；RL 是机制补充，不把训练逻辑加入推理 stage。",
+      "rl": [
+        42
+      ],
+      "cpp": null,
+      "k8s": [],
+      "sources": [
+        {
+          "label": "固定版本总览",
+          "url": "https://github.com/sgl-project/sglang-omni/blob/870d77446b3fae6e4f4f2a6964f7eae2f75e663a/README.md"
+        },
+        {
+          "label": "原 RL 42 天计划",
+          "url": "https://github.com/HlinForest/rl-inference-lab/blob/main/docs/curriculum.md"
+        }
+      ],
+      "status": "未开始"
+    }
+  ],
+  "cse_reference_commit": "b9428ec2466fcf777d79e0ea32501e889e49040c"
+}

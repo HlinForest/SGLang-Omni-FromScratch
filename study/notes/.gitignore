@@ -1,0 +1,5 @@
+# 每日填写内容保存在本地；GitHub 只发布模板和 schedule.json。
+# Also keep experiment logs, JSON, notebooks and any CSE291 work local.
+*
+!.gitignore
+!.gitkeep
